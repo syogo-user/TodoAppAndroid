@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 const val EXTRA_TASK = "com.example.todotask.TASK"
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        listView1.setOnItemLongClickListener{ parent, view, postion, id ->
+        listView1.setOnItemLongClickListener { parent, view, postion, id ->
             // listViewを長押し
             // タスク削除
             val task = parent.adapter.getItem(postion) as Task
@@ -52,10 +54,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun reloadListView() {
         // データを取得し、日付順にソート
-//         ListViewのアダプターに設定する
-        listView1.adapter = mTaskAdapter
-        // アダプターにデータの変更を通知する
-        mTaskAdapter.notifyDataSetChanged()
+        val db = FirebaseFirestore.getInstance()
+        val tasks = db.collection("tasks")
+        tasks.get().addOnCompleteListener(OnCompleteListener {
+            if (it.isSuccessful()) {
+                val taskList = it.result.toObjects(Task::class.java)
+                mTaskAdapter.taskList = taskList
+                // ListViewのアダプターに設定する
+                listView1.adapter = mTaskAdapter
+                // アダプターにデータの変更を通知する
+                mTaskAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     override fun onDestroy() {

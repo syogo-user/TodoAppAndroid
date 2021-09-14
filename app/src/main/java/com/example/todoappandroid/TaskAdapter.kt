@@ -22,6 +22,7 @@ class TaskAdapter(context: Context) : BaseAdapter() {
         val textView1 = view.findViewById<TextView>(android.R.id.text1)
         val textView2 = view.findViewById<TextView>(android.R.id.text2)
         textView1.text = taskList[position].title
+//        textView2.text = taskList[position].contents
         var simpleDateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.JAPANESE)
         val date = taskList[position].date
         textView2.text = simpleDateFormat.format(date)

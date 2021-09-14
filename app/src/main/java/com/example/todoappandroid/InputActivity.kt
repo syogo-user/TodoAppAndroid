@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.support.v7.widget.Toolbar
+import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.content_input.*
 import java.util.*
 
@@ -40,7 +42,6 @@ class InputActivity : AppCompatActivity() {
             }, mHour, mMinute, false)
         timePickerDialog.show()
     }
-
     private val mOnDoneClickListener = View.OnClickListener {
         addTask()
         finish()
@@ -62,12 +63,6 @@ class InputActivity : AppCompatActivity() {
         times_button.setOnClickListener(mOnTimeClickListener)
         done_button.setOnClickListener(mOnDoneClickListener)
 
-        val intent = intent
-        // val taskId = intent.getIntExtra(EXTRA_TASK, -1)
-        // val realm = Realm.getDefaultInstance()
-        // mTask = realm.where(Task::class.java).equalTo("id", taskId).findFirst()
-        // realm.close()
-
         if (mTask == null) {
             // 新規
             val calendar = Calendar.getInstance()
@@ -80,9 +75,7 @@ class InputActivity : AppCompatActivity() {
             // 更新
             title_edit_text.setText(mTask!!.title)
             content_edit_text.setText(mTask!!.contents)
-
             val calendar = Calendar.getInstance()
-            calendar.time = mTask!!.date
             mYear = calendar.get(Calendar.YEAR)
             mMonth = calendar.get(Calendar.MONTH)
             mDay = calendar.get(Calendar.DAY_OF_MONTH)
@@ -100,5 +93,20 @@ class InputActivity : AppCompatActivity() {
     }
 
     private fun addTask() {
+        val title = title_edit_text.text.toString()
+        val content = content_edit_text.text.toString()
+        val calendar = GregorianCalendar(mYear, mMonth, mDay, mHour, mMinute)
+        val date = calendar.time
+        val db = FirebaseFirestore.getInstance()
+        val task = Task(0,title,content,date)
+        db.collection("tasks")
+            .document()
+            .set(task)
+            .addOnSuccessListener{ document ->
+                Log.d("TAG","success")
+            }
+            .addOnFailureListener{ e ->
+                Log.d("TAG",e.toString())
+            }
     }
 }
