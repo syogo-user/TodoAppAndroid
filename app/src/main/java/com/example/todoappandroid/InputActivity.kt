@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.content_input.*
 import java.util.*
 
 class InputActivity : AppCompatActivity() {
+    private var id = 0
     private var mYear = 0
     private var mMonth = 0
     private var mDay = 0
@@ -63,8 +64,16 @@ class InputActivity : AppCompatActivity() {
         times_button.setOnClickListener(mOnTimeClickListener)
         done_button.setOnClickListener(mOnDoneClickListener)
 
+        val intent = intent
+        val task = intent.getSerializableExtra(EXTRA_TASK)
+        val taskMaxId = intent.getIntExtra(EXTRA_TASK_ID,-1)
+        // TODO このif文は必ずtrueになるためif 文以外の書き方を探す
+        if (task is Task) {
+            mTask = task
+        }
         if (mTask == null) {
             // 新規
+            id = taskMaxId + 1
             val calendar = Calendar.getInstance()
             mYear = calendar.get(Calendar.YEAR)
             mMonth = calendar.get(Calendar.MONTH)
@@ -73,6 +82,7 @@ class InputActivity : AppCompatActivity() {
             mMinute = calendar.get(Calendar.MINUTE)
         } else {
             // 更新
+            id = mTask!!.id
             title_edit_text.setText(mTask!!.title)
             content_edit_text.setText(mTask!!.contents)
             val calendar = Calendar.getInstance()
@@ -98,11 +108,11 @@ class InputActivity : AppCompatActivity() {
         val calendar = GregorianCalendar(mYear, mMonth, mDay, mHour, mMinute)
         val date = calendar.time
         val db = FirebaseFirestore.getInstance()
-        val task = Task(0,title,content,date)
+        val task = Task(id,title,content,date)
         db.collection("tasks")
-            .document()
+            .document("uid" + task.id.toString()) // TODO uidをログインUIDとする
             .set(task)
-            .addOnSuccessListener{ document ->
+            .addOnSuccessListener{
                 Log.d("TAG","success")
             }
             .addOnFailureListener{ e ->

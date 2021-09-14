@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 const val EXTRA_TASK = "com.example.todotask.TASK"
+const val EXTRA_TASK_ID = "com.example.todotask.TASKID"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mTaskAdapter: TaskAdapter
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         fab.setOnClickListener { view ->
             val intent = Intent(this@MainActivity, InputActivity::class.java)
+            intent.putExtra(EXTRA_TASK_ID, mTaskAdapter.getMaxId())
             startActivity(intent)
         }
 
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             // listViewをタップ時
             val task = parent.adapter.getItem(position) as Task
             val intent = Intent(this@MainActivity, InputActivity::class.java)
-            intent.putExtra(EXTRA_TASK, task.id)
+            intent.putExtra(EXTRA_TASK, task)
             startActivity(intent)
         }
 

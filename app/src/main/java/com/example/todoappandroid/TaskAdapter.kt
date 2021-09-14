@@ -40,6 +40,16 @@ class TaskAdapter(context: Context) : BaseAdapter() {
     override fun getCount(): Int {
         return taskList.size
     }
+
+    // IDの最大値を取得
+    fun getMaxId(): Int {
+        if (taskList.size > 0) {
+            return taskList.maxBy { it.id }!!.id
+        } else {
+            return -1
+        }
+
+    }
 }
 
 

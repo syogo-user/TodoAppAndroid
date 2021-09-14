@@ -3,7 +3,7 @@ package com.example.todoappandroid
 import java.io.Serializable
 import java.util.*
 
-open class Task(val id: Int = 0 ,val title: String = "", val contents: String = "", val date: Date = Date()){
+open class Task(val id: Int = 0 ,val title: String = "", val contents: String = "", val date: Date = Date()):Serializable {
 //    var id: Int = 0
 //    var title: String = "" // タイトル
 //    var contents: String = "" // 内容
