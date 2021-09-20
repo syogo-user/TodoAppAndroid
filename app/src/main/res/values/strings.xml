@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">TodoAppAndroid</string>
     <string name="action_settings">Settings</string>
+    <string name="email">メールアドレス</string>
+    <string name="password">パスワード(6文字以上)</string>
+    <string name="showName">表示名</string>
 </resources>

@@ -25,7 +25,7 @@ class InputActivity : AppCompatActivity() {
                 mYear = year
                 mMonth = month
                 mDay = dayOfMonth
-                val dateString = mYear.toString() + "/" + String.format(
+                val dateString: String = mYear.toString() + "/" + String.format(
                     "%02d",
                     mMonth + 1
                 ) + "/" + String.format("%02d", mDay)
@@ -92,7 +92,7 @@ class InputActivity : AppCompatActivity() {
             mHour = calendar.get(Calendar.HOUR_OF_DAY)
             mMinute = calendar.get(Calendar.MINUTE)
 
-            val dateString = mYear.toString() + "/" + String.format(
+            val dateString: String = mYear.toString() + "/" + String.format(
                 "%02d",
                 mMonth + 1
             ) + "/" + String.format("%02d", mDay)
